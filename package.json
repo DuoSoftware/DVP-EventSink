@@ -1,0 +1,26 @@
+{
+  "name": "dvp-eventsink",
+  "version": "1.0.0",
+  "description": "DVP Event sink for consume events from event monitor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DuoSoftware/DVP-EventSink.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DuoSoftware/DVP-EventSink/issues"
+  },
+  "homepage": "https://github.com/DuoSoftware/DVP-EventSink#readme",
+  "dependencies": {
+    "amqp": "^0.2.6",
+    "config": "^1.28.1",
+    "dvp-common": "^0.8.5",
+    "dvp-dbmodels": "^1.4.1",
+    "node-uuid": "^1.4.8"
+  }
+}
