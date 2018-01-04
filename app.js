@@ -72,6 +72,7 @@ if(config.evtConsumeType === 'amqp')
                 var companyId = evtObj['CompanyId'];
                 var tenantId = evtObj['TenantId'];
                 var sessionId = evtObj['SessionId'];
+                var bUnit = evtObj['BusinessUnit'];
 
                 if(!companyId)
                 {
@@ -99,7 +100,8 @@ if(config.evtConsumeType === 'amqp')
                     EventCategory: evtCategory,
                     EventTime: evtTime,
                     EventData: evtData,
-                    EventParams: evtParams
+                    EventParams: evtParams,
+                    BusinessUnit: bUnit
 
                 });
 
