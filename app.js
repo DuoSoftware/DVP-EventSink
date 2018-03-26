@@ -170,6 +170,7 @@ else
     {
         if(channel && channel === 'SYS:MONITORING:DVPEVENTS')
         {
+            console.log('eeeeeeeeeeeeeeeeeee');
             var reqId = nodeUuid.v1();
 
             logger.debug('[DVP-EventService.DVPEVENTS] - [%s] - Event Received - Params - message : %s, appId : %s', reqId, message);
