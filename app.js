@@ -117,16 +117,12 @@ if(config.evtConsumeType === 'amqp')
                     evtParams = JSON.stringify(evtParams);
                 }
 
-                message = null;
-                evtObj = null;
 
-                console.log('ddddddddddddddddddddddddd');
-
-                //global.gc();
+                console.log('wee');
 
                 //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
 
-                /*var evt = dbModel.DVPEvent.build({
+                var evt = dbModel.DVPEvent.build({
                     SessionId: sessionId,
                     EventName: evtName,
                     CompanyId: companyId,
@@ -143,11 +139,14 @@ if(config.evtConsumeType === 'amqp')
 
                 dbBackendHandler.AddEventData(evt, function(err, result)
                 {
+                    message = null;
+                    evtObj = null;
+                    evt = null;
                     if(err)
                     {
                         logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
                     }
-                })*/
+                })
 
 
             });
