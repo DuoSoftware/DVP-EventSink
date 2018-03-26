@@ -19,8 +19,8 @@
   "dependencies": {
     "amqp": "^0.2.6",
     "config": "^1.28.1",
-    "dvp-common": "0.0.50",
-    "dvp-dbmodels": "0.0.50",
+    "dvp-common": "1.1.0",
+    "dvp-dbmodels": "2.2.5",
     "node-uuid": "^1.4.8"
   }
 }
