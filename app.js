@@ -11,6 +11,33 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var util = require('util');
 var amqp = require('amqp');
 
+
+var saveOnDB = function(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit)
+{
+    var evt = dbModel.DVPEvent.build({
+        SessionId: sessionId,
+        EventName: evtName,
+        CompanyId: companyId,
+        TenantId: tenantId,
+        EventClass: evtClass,
+        EventType: evtType,
+        EventCategory: evtCategory,
+        EventTime: evtTime,
+        EventData: evtData,
+        EventParams: evtParams,
+        BusinessUnit: bUnit
+
+    });
+
+    dbBackendHandler.AddEventData(evt, function(err, result)
+    {
+        if(err)
+        {
+            logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
+        }
+    })
+};
+
 if(config.evtConsumeType === 'amqp')
 {
     var amqpConState = 'CLOSED';
@@ -90,7 +117,9 @@ if(config.evtConsumeType === 'amqp')
                     evtParams = JSON.stringify(evtParams);
                 }
 
-                var evt = dbModel.DVPEvent.build({
+                saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
+
+                /*var evt = dbModel.DVPEvent.build({
                     SessionId: sessionId,
                     EventName: evtName,
                     CompanyId: companyId,
@@ -105,7 +134,7 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
-                /*dbBackendHandler.AddEventData(evt, function(err, result)
+                dbBackendHandler.AddEventData(evt, function(err, result)
                 {
                     if(err)
                     {
