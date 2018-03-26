@@ -7,7 +7,7 @@
 
 #EXPOSE 8838
 
-FROM node:5.10.0
+FROM node:9.9.0
 ARG VERSION_TAG
 RUN git clone -b $VERSION_TAG https://github.com/DuoSoftware/DVP-EventSink.git /usr/local/src/eventsink
 RUN cd /usr/local/src/eventsink;
