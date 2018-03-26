@@ -117,7 +117,7 @@ if(config.evtConsumeType === 'amqp')
                     evtParams = JSON.stringify(evtParams);
                 }
 
-                saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
+                //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
 
                 /*var evt = dbModel.DVPEvent.build({
                     SessionId: sessionId,
