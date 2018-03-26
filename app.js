@@ -138,16 +138,19 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
-                dbBackendHandler.AddEventData(evt, function(err, result)
-                {
-                    message = null;
-                    evtObj = null;
-                    evt = null;
-                    if(err)
+                evt
+                    .save()
+                    .then(function (rsp)
+                    {
+                        message = null;
+                        evtObj = null;
+                        evt = null;
+                        rsp = null;
+
+                    }).catch(function(err)
                     {
                         logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
-                    }
-                })
+                    });
 
 
             });
