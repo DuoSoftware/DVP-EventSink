@@ -120,6 +120,8 @@ if(config.evtConsumeType === 'amqp')
                 message = null;
                 evtObj = null;
 
+                global.gc();
+
                 //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
 
                 /*var evt = dbModel.DVPEvent.build({
