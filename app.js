@@ -120,7 +120,9 @@ if(config.evtConsumeType === 'amqp')
                 message = null;
                 evtObj = null;
 
-                global.gc();
+                console.log('ddddddddddddddddddddddddd');
+
+                //global.gc();
 
                 //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
 
