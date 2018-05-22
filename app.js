@@ -1,5 +1,6 @@
 /**
  * Created by dinusha on 11/28/2017.
+ * test
  */
 
 var redisHandler = require('./RedisHandler.js');
@@ -10,6 +11,33 @@ var nodeUuid = require('node-uuid');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var util = require('util');
 var amqp = require('amqp');
+
+
+var saveOnDB = function(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit)
+{
+    var evt = dbModel.DVPEvent.build({
+        SessionId: sessionId,
+        EventName: evtName,
+        CompanyId: companyId,
+        TenantId: tenantId,
+        EventClass: evtClass,
+        EventType: evtType,
+        EventCategory: evtCategory,
+        EventTime: evtTime,
+        EventData: evtData,
+        EventParams: evtParams,
+        BusinessUnit: bUnit
+
+    });
+
+    dbBackendHandler.AddEventData(evt, function(err, result)
+    {
+        if(err)
+        {
+            logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
+        }
+    })
+};
 
 if(config.evtConsumeType === 'amqp')
 {
@@ -90,6 +118,11 @@ if(config.evtConsumeType === 'amqp')
                     evtParams = JSON.stringify(evtParams);
                 }
 
+
+                console.log('wee');
+
+                //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
+
                 var evt = dbModel.DVPEvent.build({
                     SessionId: sessionId,
                     EventName: evtName,
@@ -105,13 +138,19 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
-                dbBackendHandler.AddEventData(evt, function(err, result)
-                {
-                    if(err)
+                evt
+                    .save()
+                    .then(function (rsp)
+                    {
+                        message = null;
+                        evtObj = null;
+                        evt = null;
+                        rsp = null;
+
+                    }).catch(function(err)
                     {
                         logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
-                    }
-                })
+                    });
 
 
             });
