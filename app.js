@@ -11,6 +11,7 @@ var nodeUuid = require('node-uuid');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var util = require('util');
 var amqp = require('amqp');
+var externalApiHandler = require('./ExternalApiAccess.js');
 
 
 var saveOnDB = function(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit)
@@ -119,8 +120,6 @@ if(config.evtConsumeType === 'amqp')
                 }
 
 
-                console.log('wee');
-
                 //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
 
                 var evt = dbModel.DVPEvent.build({
@@ -138,6 +137,12 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
+                if ((evtClass === 'CALL' || evtClass === 'TICKET' || evtClass === 'AGENT') && config.triggerToIntegrations == 'true')
+                {
+                    //Call API
+                    externalApiHandler.EventTrigger(companyId, tenantId, evtParams);
+                }
+
                 evt
                     .save()
                     .then(function (rsp)
@@ -149,7 +154,7 @@ if(config.evtConsumeType === 'amqp')
 
                     }).catch(function(err)
                     {
-                        logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
+                        logger.error('[DVP-EventService.DVPEVENTS] - dbBackendHandler.AddEventData threw an exception', err);
                     });
 
 
@@ -160,7 +165,7 @@ if(config.evtConsumeType === 'amqp')
 
     connection.on('error', function(e)
     {
-        logger.error('[DVP-EventMonitor.handler] - [%s] - AMQP Connection ERROR', e);
+        logger.error('[DVP-EventMonitor.handler] - AMQP Connection ERROR', e);
         amqpConState = 'CLOSE';
     });
 
@@ -175,7 +180,7 @@ else
         {
             var reqId = nodeUuid.v1();
 
-            logger.debug('[DVP-EventService.DVPEVENTS] - [%s] - Event Received - Params - message : %s, appId : %s', reqId, message);
+            logger.debug('[DVP-EventService.DVPEVENTS] - Event Received - Params - message : %s, appId : %s', message);
 
             if(message)
             {
