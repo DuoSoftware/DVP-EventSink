@@ -4,7 +4,7 @@ var util = require('util');
 var validator = require('validator');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 
-var EventTrigger = function(companyId, tenantId, payload)
+var EventTrigger = function(companyId, tenantId, evtType, payload)
 {
     try
     {
@@ -15,11 +15,11 @@ var EventTrigger = function(companyId, tenantId, payload)
         var token = config.Token;
 
 
-        var httpUrl = util.format('http://%s/DVP/API/EventTrigger/Trigger', eventTriggerIp);
+        var httpUrl = util.format('http://%s/DVP/API/EventTrigger/Trigger?eventType=%s', eventTriggerIp, evtType);
 
         if(validator.isIP(eventTriggerIp))
         {
-            httpUrl = util.format('http://%s:%d/DVP/API/EventTrigger/Trigger', eventTriggerIp, eventTriggerPort);
+            httpUrl = util.format('http://%s:%d/DVP/API/EventTrigger/Trigger', eventTriggerIp, eventTriggerPort, evtType);
         }
 
         var options = {

@@ -102,6 +102,7 @@ if(config.evtConsumeType === 'amqp')
                 var tenantId = evtObj['TenantId'];
                 var sessionId = evtObj['SessionId'];
                 var bUnit = evtObj['BusinessUnit'];
+                var evtSpecificData = evtObj['EventSpecificData'];
 
                 if(!companyId)
                 {
@@ -117,6 +118,11 @@ if(config.evtConsumeType === 'amqp')
                 if(evtParams && util.isObject(evtParams)){
 
                     evtParams = JSON.stringify(evtParams);
+                }
+
+                if(evtSpecificData && util.isObject(evtSpecificData)){
+
+                    evtSpecificData = JSON.stringify(evtSpecificData);
                 }
 
 
@@ -137,10 +143,23 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
-                if ((evtClass === 'CALL' || evtClass === 'TICKET' || evtClass === 'AGENT') && config.triggerToIntegrations == 'true')
+                if ((evtClass === 'CALL' || evtClass === 'TICKET' || evtClass === 'AGENT' || evtName === 'ards-added') && config.triggerToIntegrations == 'true' && evtSpecificData)
                 {
+                    var evtype = "";
+                    if(evtClass === 'CALL' || evtName === 'ards-added')
+                    {
+                        evtype = "CALL";
+                    }
+                    else if(evtClass === 'TICKET')
+                    {
+                        evtype = "TICKET";
+                    }
+                    else if(evtClass === 'AGENT')
+                    {
+                        evtype = "AGENT";
+                    }
                     //Call API
-                    externalApiHandler.EventTrigger(companyId, tenantId, evtParams);
+                    externalApiHandler.EventTrigger(companyId, tenantId, evtype, evtSpecificData);
                 }
 
                 evt
