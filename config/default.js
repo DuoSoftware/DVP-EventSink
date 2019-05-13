@@ -53,7 +53,7 @@ module.exports = {
     },
 
   "EventTrigger": {
-        "ip": 'eventtriggerservice.app.veery.cloud',
+        "ip": 'eventtriggerservice.app1.veery.cloud',
         "port": 3645,
         "version": '1.0.0.0'
   },

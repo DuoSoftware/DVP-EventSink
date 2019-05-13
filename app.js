@@ -143,6 +143,8 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
+                console.log('TriggerToIntegration : ' + config.triggerToIntegrations);
+
                 if ((evtClass === 'CALL' || evtClass === 'TICKET' || evtClass === 'AGENT' || evtName === 'ards-added') && config.triggerToIntegrations == 'true' && evtSpecificData)
                 {
                     var evtype = "";
@@ -160,6 +162,10 @@ if(config.evtConsumeType === 'amqp')
                     }
                     //Call API
                     externalApiHandler.EventTrigger(companyId, tenantId, evtype, evtSpecificData);
+                }
+                else
+                {
+                    console.log('NOT SENDING TRIGGER');
                 }
 
                 evt
