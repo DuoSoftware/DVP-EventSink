@@ -15,11 +15,11 @@ var EventTrigger = function(companyId, tenantId, evtType, payload)
         var token = config.Token;
 
 
-        var httpUrl = util.format('http://%s/DVP/API/EventTrigger/Trigger?eventType=%s', eventTriggerIp, evtType);
+        var httpUrl = util.format('http://%s/DVP/API/1.0.0.0/EventTrigger/Trigger?eventType=%s', eventTriggerIp, evtType);
 
         if(validator.isIP(eventTriggerIp))
         {
-            httpUrl = util.format('http://%s:%d/DVP/API/EventTrigger/Trigger', eventTriggerIp, eventTriggerPort, evtType);
+            httpUrl = util.format('http://%s:%d/DVP/API/1.0.0.0/EventTrigger/Trigger', eventTriggerIp, eventTriggerPort, evtType);
         }
 
         var options = {
