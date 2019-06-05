@@ -11,6 +11,7 @@ var nodeUuid = require('node-uuid');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var util = require('util');
 var amqp = require('amqp');
+var externalApiHandler = require('./ExternalApiAccess.js');
 
 
 var saveOnDB = function(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit)
@@ -101,6 +102,7 @@ if(config.evtConsumeType === 'amqp')
                 var tenantId = evtObj['TenantId'];
                 var sessionId = evtObj['SessionId'];
                 var bUnit = evtObj['BusinessUnit'];
+                var evtSpecificData = evtObj['EventSpecificData'];
 
                 if(!companyId)
                 {
@@ -118,8 +120,11 @@ if(config.evtConsumeType === 'amqp')
                     evtParams = JSON.stringify(evtParams);
                 }
 
+                if(evtSpecificData && util.isObject(evtSpecificData)){
 
-                console.log('wee');
+                    evtSpecificData = JSON.stringify(evtSpecificData);
+                }
+
 
                 //saveOnDB(sessionId, evtName, companyId, tenantId, evtClass, evtType, evtCategory, evtTime, evtData, evtParams, bUnit);
 
@@ -138,6 +143,32 @@ if(config.evtConsumeType === 'amqp')
 
                 });
 
+                console.log('TriggerToIntegration : ' + config.triggerToIntegrations);
+
+                //if ((evtClass === 'CALL' || evtClass === 'TICKET' || evtClass === 'AGENT' || evtName === 'ards-added') && evtSpecificData)
+                if ((evtClass === 'CALL' || evtClass === 'TICKET' || evtClass === 'AGENT' || evtName === 'ards-added') && config.triggerToIntegrations === 'true' && evtSpecificData)
+                {
+                    var evtype = "";
+                    if(evtClass === 'CALL' || evtName === 'ards-added')
+                    {
+                        evtype = "CALL";
+                    }
+                    else if(evtClass === 'TICKET')
+                    {
+                        evtype = "TICKET";
+                    }
+                    else if(evtClass === 'AGENT')
+                    {
+                        evtype = "AGENT";
+                    }
+                    //Call API
+                    externalApiHandler.EventTrigger(companyId, tenantId, evtype, evtSpecificData);
+                }
+                else
+                {
+                    console.log('NOT SENDING TRIGGER');
+                }
+
                 evt
                     .save()
                     .then(function (rsp)
@@ -149,7 +180,7 @@ if(config.evtConsumeType === 'amqp')
 
                     }).catch(function(err)
                     {
-                        logger.error('[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception', reqId, err);
+                        logger.error('[DVP-EventService.DVPEVENTS] - dbBackendHandler.AddEventData threw an exception', err);
                     });
 
 
@@ -160,7 +191,7 @@ if(config.evtConsumeType === 'amqp')
 
     connection.on('error', function(e)
     {
-        logger.error('[DVP-EventMonitor.handler] - [%s] - AMQP Connection ERROR', e);
+        logger.error('[DVP-EventMonitor.handler] - AMQP Connection ERROR', e);
         amqpConState = 'CLOSE';
     });
 
@@ -175,7 +206,7 @@ else
         {
             var reqId = nodeUuid.v1();
 
-            logger.debug('[DVP-EventService.DVPEVENTS] - [%s] - Event Received - Params - message : %s, appId : %s', reqId, message);
+            logger.debug('[DVP-EventService.DVPEVENTS] - Event Received - Params - message : %s, appId : %s', message);
 
             if(message)
             {

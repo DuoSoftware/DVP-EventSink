@@ -55,5 +55,13 @@ module.exports = {
         "Version":"HOST_VERSION"
     },
 
-    "evtConsumeType": 'HOST_EVENT_CONSUME_TYPE'
+    "EventTrigger": {
+        "ip": 'SYS_EVENTTRIGGERSERVICE_HOST',
+        "port": 'SYS_EVENTTRIGGERSERVICE_PORT',
+        "version": 'SYS_EVENTTRIGGERSERVICE_VERSION'
+    },
+
+    "evtConsumeType": 'HOST_EVENT_CONSUME_TYPE',
+    "triggerToIntegrations": 'HOST_EVENT_TRIGGER',
+    "Token": "HOST_TOKEN"
 };
