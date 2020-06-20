@@ -1,40 +1,40 @@
 module.exports = {
   DB: {
     Type: "postgres",
-    User: "duo",
-    Password: "DuoS123",
+    User: "",
+    Password: "",
     Port: 5432,
-    Host: "104.236.231.11",
+    Host: "",
     Database: "duo",
   },
   Redis: {
-    mode: "sentinel", //instance, cluster, sentinel
-    ip: "45.55.142.207",
+    mode: "", //instance, cluster, sentinel
+    ip: "",
     port: 6389,
-    user: "duo",
-    password: "DuoS123",
+    user: "",
+    password: "",
     sentinels: {
-      hosts: "138.197.90.92,45.55.205.92,138.197.90.92",
-      port: 16389,
+      hosts: "",
+      port: 6379,
       name: "redis-cluster",
     },
   },
 
   Security: {
     ip: "45.55.142.207",
-    port: 6389,
-    user: "duo",
-    password: "DuoS123",
+    port: 6379,
+    user: "",
+    password: "",
     mode: "sentinel", //instance, cluster, sentinel
     sentinels: {
       hosts: "138.197.90.92,45.55.205.92,138.197.90.92",
-      port: 16389,
+      port: 6379,
       name: "redis-cluster",
     },
   },
 
   RabbitMQ: {
-    ip: "45.55.142.207",
+    ip: "",
     port: "5672",
     user: "admin",
     password: "admin",
@@ -48,7 +48,7 @@ module.exports = {
   },
 
   EventTrigger: {
-    ip: "eventtriggerservice.app1.veery.cloud",
+    ip: "",
     port: 3645,
     version: "1.0.0.0",
   },
