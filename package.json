@@ -20,9 +20,10 @@
     "amqp": "^0.2.6",
     "config": "^1.28.1",
     "dvp-common": "1.1.0",
+    "dvp-common-lite": "^1.1.0",
     "dvp-dbmodels": "2.2.5",
     "node-uuid": "^1.4.8",
-    "validator": "^4.1.0",
-    "request": "^2.55.0"
+    "request": "^2.55.0",
+    "validator": "^4.1.0"
   }
 }

@@ -8,26 +8,25 @@ var dbBackendHandler = require("./DbBackendHandler.js");
 var dbModel = require("dvp-dbmodels");
 var config = require("config");
 var nodeUuid = require("node-uuid");
-var logger = require("dvp-common/LogHandler/CommonLogHandler.js").logger;
+var logger = require("dvp-common-lite/LogHandler/CommonLogHandler.js").logger;
 var util = require("util");
 var amqp = require("amqp");
 var externalApiHandler = require("./ExternalApiAccess.js");
 let readyCount = 0;
 
-
-process.on("uncaughtException", function(err) {
+process.on("uncaughtException", function (err) {
   console.error(err);
   console.log("[Unhandled Exception] Node Exiting...");
   process.exit(1);
 });
 
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
   console.error(err);
   console.log("[Unhandled Rejection] Node Exiting...");
   process.exit(1);
 });
 
-var saveOnDB = function(
+var saveOnDB = function (
   sessionId,
   evtName,
   companyId,
@@ -51,10 +50,10 @@ var saveOnDB = function(
     EventTime: evtTime,
     EventData: evtData,
     EventParams: evtParams,
-    BusinessUnit: bUnit
+    BusinessUnit: bUnit,
   });
 
-  dbBackendHandler.AddEventData(evt, function(err, result) {
+  dbBackendHandler.AddEventData(evt, function (err, result) {
     if (err) {
       logger.error(
         "[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception",
@@ -84,30 +83,30 @@ if (config.evtConsumeType === "amqp") {
       password: config.RabbitMQ.password,
       vhost: config.RabbitMQ.vhost,
       noDelay: true,
-      heartbeat: 10
+      heartbeat: 10,
     },
     {
       reconnect: true,
       reconnectBackoffStrategy: "linear",
       reconnectExponentialLimit: 120000,
-      reconnectBackoffTime: 1000
+      reconnectBackoffTime: 1000,
     }
   );
 
   //logger.debug('[DVP-EventMonitor.handler] - [%s] - AMQP Creating connection ' + rmqIp + ' ' + rmqPort + ' ' + rmqUser + ' ' + rmqPassword);
 
-  connection.on("connect", function() {
+  connection.on("connect", function () {
     amqpConState = "CONNECTED";
     logger.debug(
       "[DVP-EventService.AMQPConnection] - [%s] - AMQP Connection CONNECTED"
     );
   });
 
-  connection.on("heartbeat", function() {
+  connection.on("heartbeat", function () {
     logger.debug("RabbitMQ HeartBeat");
   });
 
-  connection.on("ready", function() {
+  connection.on("ready", function () {
     amqpConState = "READY";
 
     logger.debug(
@@ -118,11 +117,11 @@ if (config.evtConsumeType === "amqp") {
       connection.queue(
         "DVPEVENTS",
         { durable: true, autoDelete: false },
-        function(q) {
+        function (q) {
           q.bind("#");
 
           // Receive messages
-          q.subscribe(function(message) {
+          q.subscribe(function (message) {
             // Print messages to stdout
             var reqId = nodeUuid.v1();
             var evtObj = message;
@@ -169,7 +168,7 @@ if (config.evtConsumeType === "amqp") {
               EventTime: evtTime,
               EventData: evtData,
               EventParams: evtParams,
-              BusinessUnit: bUnit
+              BusinessUnit: bUnit,
             });
 
             console.log(
@@ -206,13 +205,13 @@ if (config.evtConsumeType === "amqp") {
 
             evt
               .save()
-              .then(function(rsp) {
+              .then(function (rsp) {
                 message = null;
                 evtObj = null;
                 evt = null;
                 rsp = null;
               })
-              .catch(function(err) {
+              .catch(function (err) {
                 logger.error(
                   "[DVP-EventService.DVPEVENTS] - dbBackendHandler.AddEventData threw an exception",
                   err
@@ -223,14 +222,14 @@ if (config.evtConsumeType === "amqp") {
       );
   });
 
-  connection.on("error", function(e) {
+  connection.on("error", function (e) {
     logger.error("[DVP-EventMonitor.handler] - AMQP Connection ERROR", e);
     amqpConState = "CLOSE";
   });
 } else {
   redisHandler.RedisSubscribe("SYS:MONITORING:DVPEVENTS");
 
-  redisHandler.redisClient.on("message", function(channel, message) {
+  redisHandler.redisClient.on("message", function (channel, message) {
     if (channel && channel === "SYS:MONITORING:DVPEVENTS") {
       var reqId = nodeUuid.v1();
 
@@ -275,10 +274,10 @@ if (config.evtConsumeType === "amqp") {
           EventCategory: evtCategory,
           EventTime: evtTime,
           EventData: evtData,
-          EventParams: evtParams
+          EventParams: evtParams,
         });
 
-        dbBackendHandler.AddEventData(evt, function(err, result) {
+        dbBackendHandler.AddEventData(evt, function (err, result) {
           if (err) {
             logger.error(
               "[DVP-EventService.DVPEVENTS] - [%s] - dbBackendHandler.AddEventData threw an exception",
