@@ -53,7 +53,7 @@ module.exports = {
     version: "1.0.0.0",
   },
 
-  dynamicPort: true,
+  dynamicPort: false,
 
   evtConsumeType: "amqp",
   triggerToIntegrations: "true",
