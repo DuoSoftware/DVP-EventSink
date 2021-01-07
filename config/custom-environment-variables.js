@@ -43,6 +43,7 @@ module.exports = {
   },
 
   Host: {
+    Ip: "HOST_NAME",
     Port: "HOST_EVENTSINK_PORT",
     Version: "HOST_VERSION",
   },
